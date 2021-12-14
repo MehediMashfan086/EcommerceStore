@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import *
-from django.http import JsonResponse
+from django.http import JsonResponse, request
 import json
 import datetime
 from .utils import *
@@ -75,6 +75,12 @@ def updateItem(request):
 
 
 def processOrder(request):
-	
+	transaction_id = datetime.datetime.now().timestamp()
+
+	if request.user.is_authenticated:
+		customer = request.user.customer
+		order, created = Order.objects.get_or_create(customer=customer, complete=False)
+	else:
+		print('User is not logged in...')
 
 	return JsonResponse('Payment submitted..', safe=False)
